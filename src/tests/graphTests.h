@@ -30,3 +30,7 @@ float testVertex(Debug debugType);
  * @returns float : the percentage of passed tests
  **/ 
 float testEdge(Debug debugType);
+
+// ================= test suite definitions ========
+float testVertexConstructor(Debug debugType);
+float testVertexSetters(Debug debugType);

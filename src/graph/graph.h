@@ -10,6 +10,9 @@ class Vertex{
         float getX();
         float getY();
         float getZ();
+        void setX(float x);
+        void setY(float y);
+        void setZ(float z);
     private:
         float x;
         float y;
@@ -25,8 +28,8 @@ class Edge{
         Edge(int start, int end);
         int getStart();
         int getEnd();
-        void setStart();
-        void setEnd();
+        void setStart(int start);
+        void setEnd(int end);
     private:
         int start;
         int end;
