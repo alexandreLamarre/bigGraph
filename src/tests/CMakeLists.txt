@@ -1,0 +1,1 @@
+add_library(tests ./vertex/vertextests.cpp ./edge/edgetests.cpp graphtests.cpp)

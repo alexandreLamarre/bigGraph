@@ -6,7 +6,14 @@
  **/
 class Vertex{
     public:
-        Vertex();
+        Vertex(float x, float y, float z);
+        float getX();
+        float getY();
+        float getZ();
+    private:
+        float x;
+        float y;
+        float z;
 };
 
 /**
@@ -15,7 +22,14 @@ class Vertex{
  **/
 class Edge{
     public:
-        Edge();
+        Edge(int start, int end);
+        int getStart();
+        int getEnd();
+        void setStart();
+        void setEnd();
+    private:
+        int start;
+        int end;
 };
 
 /**
@@ -65,7 +79,7 @@ enum class GraphType{
  * @attr connected : you can reach any node from any node
  * @attr cycle : 
  **/ 
-enum class Property{
+enum class GraphProperty{
     general,
     connected,
     cycle
@@ -80,7 +94,7 @@ enum class Property{
  * @attr functional : edges have a functional evaluation metric
  * @attr quantum : edges are augmented with quantum network eigen functors
  **/
-enum class SubType{
+enum class GraphSubType{
     none, 
     directed, 
     weighted,

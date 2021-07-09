@@ -6,5 +6,6 @@ project(bigGraph)
 add_executable(${PROJECT_NAME} main.cpp)
 
 add_subdirectory(graph)
+add_subdirectory(tests)
 
-target_link_libraries(${PROJECT_NAME} graph)
+target_link_libraries(${PROJECT_NAME} graph tests)
