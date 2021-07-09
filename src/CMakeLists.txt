@@ -4,3 +4,7 @@ set (CMAKE_CXX_STANDARD 11)
 project(bigGraph)
 
 add_executable(${PROJECT_NAME} main.cpp)
+
+add_subdirectory(graph)
+
+target_link_libraries(${PROJECT_NAME} graph)

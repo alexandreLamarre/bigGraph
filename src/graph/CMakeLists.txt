@@ -1,0 +1,1 @@
+add_library(graph ./vertex/vertex.cpp ./edge/edge.cpp graph.cpp)
