@@ -15,8 +15,8 @@
  *                    functional, quantum
  **/ 
 Edge::Edge(std::map<char, std::any> edgeData, 
-             GraphType type, std::vector<GraphSubType> subTypes){
-    
+             GraphType gType, std::vector<GraphSubType> gSubTypes){
+    data =edgeData;
 }
 
 /**

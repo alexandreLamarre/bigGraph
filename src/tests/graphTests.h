@@ -34,3 +34,6 @@ float testEdge(Debug debugType);
 // ================= test suite definitions ========
 float testVertexConstructor(Debug debugType);
 float testVertexSetters(Debug debugType);
+
+float testEdgeConstructor(Debug debugType);
+float testEdgeSetters(Debug debugType);
