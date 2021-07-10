@@ -1,48 +1,8 @@
 #include <iostream>
-
-/**
- * Vertex/node data structure.
- * A vertex contain a collection of related information
- **/
-class Vertex{
-    public:
-        Vertex(float x, float y, float z);
-        float getX();
-        float getY();
-        float getZ();
-        void setX(float x);
-        void setY(float y);
-        void setZ(float z);
-    private:
-        float x;
-        float y;
-        float z;
-};
-
-/**
- * Edge/node data structure.
- * An edge represents relations between nodes.
- **/
-class Edge{
-    public:
-        Edge(int start, int end);
-        int getStart();
-        int getEnd();
-        void setStart(int start);
-        void setEnd(int end);
-    private:
-        int start;
-        int end;
-};
-
-/**
- * Graph data structure.
- * A graph represents the way we can represent relational data
- **/
-class Graph{
-    public:
-        Graph();
-};
+#include <any>
+#include <map>
+#include <vector>
+#include <string>
 
 /**
  * Specifies how the graph should be built.
@@ -104,3 +64,53 @@ enum class GraphSubType{
     functional,
     quantum
 };
+
+/**
+ * Vertex/node data structure.
+ * A vertex contain a collection of related information
+ **/
+class Vertex{
+    public:
+        Vertex(float x, float y, float z);
+        float getX();
+        float getY();
+        float getZ();
+        void setX(float x);
+        void setY(float y);
+        void setZ(float z);
+    private:
+        float x;
+        float y;
+        float z;
+};
+
+/**
+ * Edge/node data structure.
+ * An edge represents relations between nodes.
+ **/
+class Edge{
+    public:
+        Edge(std::map<char, std::any> edgeData, 
+             GraphType type, std::vector<GraphSubType> subTypes);
+        std::any getStart();
+        std::any getEnd();
+        std::any getWeight();
+        std::any getFunc();
+        std::any getQuantum();
+        void setStart(std::any);
+        void setEnd(std::any);
+        void setWeight(std::any);
+        void setFunc(std::any);
+        void setQuantum(std::any);
+        std::map<char, std::any> data;
+};
+
+/**
+ * Graph data structure.
+ * A graph represents the way we can represent relational data
+ **/
+class Graph{
+    public:
+        Graph();
+};
+
