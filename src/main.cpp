@@ -4,7 +4,7 @@
 int main(){
     std::cout << "Hello bigGraph!" << std::endl;
     float vertexPassed = testVertex(Debug::off) * 100;
-    float edgePassed = testEdge(Debug::off) * 100;
+    float edgePassed = testEdge(Debug::partial) * 100;
     float graphPassed = testGraph(Debug::off) * 100;
     std::cout << "Vertex tests passed : " << vertexPassed << "%"  << std::endl;
     std::cout << "Edge tests passed : " << edgePassed << "%"  << std::endl;
