@@ -77,7 +77,68 @@ float testEdgeConstructor(Debug debugType){
 
 float testEdgeSetters(Debug debugType){
     float cur = 0.0f;
-    float total = 12.0f;
+    float total = 4.0f;
 
-    return 1.0f;
+    Edge e = Edge(
+        std::map<char, std::any>{
+            {'s', 0},
+            {'e', 1}
+        },
+        GraphType::simple,
+        std::vector<GraphSubType> {GraphSubType::none}
+    );
+
+    e.setStart(4);
+    int start = std::any_cast<int>(e.getStart());
+    if(start == 4){
+        cur ++;
+    } else{
+        if(debugType >= Debug::partial){
+            std::cout << "Expected edge start to be 4, Got : " << start << std::endl;
+        }
+    }
+
+    e.setEnd(12);
+    e.setEnd(79);
+    int end = std::any_cast<int>(e.getEnd());
+    if(end == 79){
+        cur ++;
+    } else{
+        if(debugType >= Debug::partial){
+            std::cout << "Expected edge end to be 79, Got : " << end << std::endl;
+        }
+    }
+
+
+    Edge e2 = Edge(
+        std::map<char, std::any>{
+            {'s', std::vector<int>{1,2,3,4}},
+            {'e', std::vector<int>{4,5,6,7}}
+        },
+        GraphType::hyper,
+        std::vector<GraphSubType> {GraphSubType::none}
+    );
+
+    std::vector<int> newStarts = std::vector<int>{10,11,12,13};
+    e2.setStart(newStarts);
+    std::vector<int> starts2 = std::any_cast<std::vector<int>>(e2.getStart());
+    if(starts2[0] == 10 && starts2[1] == 11 && starts2[2] == 12 && starts2[3] == 13){
+        cur ++;
+    } else{
+        if(debugType >= Debug::partial){
+            std::cout << "Expected edge starts to be 10, 11, 12, 13, Got : " << starts2[0] << " , " << starts2[1] << " , " << starts2[2] << " , " << starts2[3] << std::endl;
+        }
+    }
+
+    std::vector<int> newEnds = std::vector<int>{25,26,227,228};
+    e2.setEnd(newEnds);
+    std::vector<int> ends2 = std::any_cast<std::vector<int>>(e2.getEnd());
+    if(ends2[0] == 25 && ends2[1] == 26 && ends2[2] == 227 && ends2[3] == 228){
+        cur++;
+    } else{
+        if(debugType >= Debug::partial){
+            std::cout << "Expected edge ends to be 25, 26, 227, 228, Got : " << ends2[0] << ", " << ends2[1] << " , " << ends2[2] << " , " << ends2[3] << std::endl;       
+        }
+    }
+    return cur == total? 1.0f: 0.0f;
 }
