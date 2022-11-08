@@ -1,6 +1,6 @@
 use crate::graph::{
     simple::{SimpleEdge, SimpleNode},
-    traits::{Edge, EdgeAdder, Graph, Node, NodeAdder, Undirected},
+    traits::{Builder, Edge, EdgeAdder, Graph, Node, NodeAdder, Undirected, UndirectedBuilder},
 };
 use std::collections::BTreeMap;
 use std::option::Iter;
@@ -15,20 +15,24 @@ impl Graph<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
     fn node(&self, id: usize) -> Option<&SimpleNode> {
         self.nodes.get(&id)
     }
-    fn nodes(&self) -> Iter<&SimpleNode> {
-        todo!("not  implemented yet")
+    fn nodes(&self) -> Option<Iter<&SimpleNode>> {
+        if self.nodes.len() == 0 {
+            return None;
+        }
+        //  >:(
+        todo!("Implement nodes() for SimpleUndirectedGraph")
     }
 
     fn from(&self, id: usize) -> Vec<&SimpleNode> {
-        todo!("not  implemented yet")
+        todo!("Implement from() for SimpleUndirectedGraph")
     }
 
     fn has_edge_between(&self, xid: usize, yid: usize) -> bool {
-        todo!("not  implemented yet")
+        self.edges.get(&xid).map_or(false, |m| m.contains_key(&yid))
     }
 
     fn edge(&self, uid: usize, vid: usize) -> Option<&SimpleEdge> {
-        todo!("not  implemented yet")
+        self.edges.get(&uid).map_or(None, |m| m.get(&vid))
     }
 }
 
@@ -38,6 +42,9 @@ impl NodeAdder<SimpleNode> for SimpleUndirectedGraph {
     }
 
     fn add_node(&mut self, node: SimpleNode) {
+        if self.nodes.get(&node.id()).is_some() {
+            panic!("node id collision : {}", node.id());
+        }
         self.nodes.insert(node.id(), node);
     }
 }
@@ -64,3 +71,7 @@ impl EdgeAdder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
 }
 
 impl Undirected<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}
+
+impl Builder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}
+
+impl UndirectedBuilder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}

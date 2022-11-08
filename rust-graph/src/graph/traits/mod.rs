@@ -1,11 +1,11 @@
 use std::fmt::Debug;
 use std::option::Iter;
 
-pub trait Node: Debug + Clone + Sized {
+pub trait Node: Debug + Clone + Sized + PartialEq {
     fn id(&self) -> usize;
 }
 
-pub trait Edge<T>: Debug + Clone + Sized
+pub trait Edge<T>: Debug + Clone + Sized + PartialEq
 where
     T: Node,
 {
@@ -26,7 +26,7 @@ where
     E: Edge<N>,
 {
     fn node(&self, id: usize) -> Option<&N>;
-    fn nodes(&self) -> Iter<&N>;
+    fn nodes(&self) -> Option<Iter<&N>>;
     // returns all nodes that can be reached directly from the node
     // with the given id
     fn from(&self, id: usize) -> Vec<&N>;
@@ -103,7 +103,7 @@ pub trait EdgeRemover {
     fn remove_edge(uid: usize, vid: usize);
 }
 
-pub trait Builder<N, E>: NodeAdder<N> + NodeRemover + EdgeAdder<N, E>
+pub trait Builder<N, E>: NodeAdder<N> + EdgeAdder<N, E>
 where
     N: Node,
     E: Edge<N>,
