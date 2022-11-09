@@ -70,7 +70,11 @@ impl EdgeAdder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
     }
 }
 
-impl Undirected<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}
+impl Undirected<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
+    fn edge_between(&self, xid: usize, yid: usize) -> Option<&SimpleEdge> {
+        todo!("Implement edge_between() for SimpleUndirectedGraph")
+    }
+}
 
 impl Builder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}
 

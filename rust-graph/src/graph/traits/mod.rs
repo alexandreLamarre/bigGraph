@@ -1,6 +1,8 @@
 use std::fmt::Debug;
 use std::option::Iter;
 
+pub mod async_graph;
+
 pub trait Node: Debug + Clone + Sized + PartialEq {
     fn id(&self) -> usize;
 }
@@ -37,8 +39,10 @@ where
 pub trait Weighted<N, E>: Graph<N, E>
 where
     N: Node,
-    E: Edge<N>,
+    E: WeightedEdge<N>,
 {
+    fn weighted_edge(&self, uid: usize, vid: usize) -> Option<&E>;
+    fn weight(&self, uid: usize, vid: usize) -> Option<f64>;
 }
 
 pub trait Undirected<N, E>: Graph<N, E>
@@ -46,13 +50,17 @@ where
     N: Node,
     E: Edge<N>,
 {
+    // returns the unique edge between the two nodes
+    fn edge_between(&self, xid: usize, yid: usize) -> Option<&E>;
 }
 
-pub trait WeightedUndirected<N, E>: Graph<N, E>
+pub trait WeightedUndirected<N, E>: Weighted<N, E>
 where
     N: Node,
-    E: Edge<N>,
+    E: WeightedEdge<N>,
 {
+    // returns the unique weighted edge between the two nodes
+    fn weighted_edge_between(&self, xid: usize, yid: usize) -> Option<&E>;
 }
 
 pub trait Directed<N, E>: Graph<N, E>
@@ -60,13 +68,19 @@ where
     N: Node,
     E: Edge<N>,
 {
+    fn has_edge_from_to(&self, uid: usize, vid: usize) -> bool;
+
+    fn to(&self, id: usize) -> Vec<&N>;
 }
 
-pub trait WeightedDirected<N, E>: Graph<N, E>
+pub trait WeightedDirected<N, E>: Weighted<N, E>
 where
     N: Node,
-    E: Edge<N>,
+    E: WeightedEdge<N>,
 {
+    fn has_edge_from_to(&self, uid: usize, vid: usize) -> bool;
+
+    fn to(&self, id: usize) -> Vec<&N>;
 }
 
 pub trait NodeAdder<N>
@@ -116,8 +130,21 @@ where
     E: WeightedEdge<N>,
 {
 }
-
 pub trait UndirectedBuilder<N, E>: Undirected<N, E> + Builder<N, E>
+where
+    N: Node,
+    E: Edge<N>,
+{
+}
+
+pub trait UndirectedWeightedBuilder<N, E>: Undirected<N, E> + WeightedBuilder<N, E>
+where
+    N: Node,
+    E: WeightedEdge<N>,
+{
+}
+
+pub trait DirectedBuilder<N, E>: Directed<N, E> + Builder<N, E>
 where
     N: Node,
     E: Edge<N>,
