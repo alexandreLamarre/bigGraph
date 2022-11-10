@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::option::Iter;
 
 pub mod async_graph;
 
@@ -28,7 +27,7 @@ where
     E: Edge<N>,
 {
     fn node(&self, id: usize) -> Option<&N>;
-    fn nodes(&self) -> Option<Iter<&N>>;
+    fn nodes(&self) -> Option<Vec<&N>>;
     // returns all nodes that can be reached directly from the node
     // with the given id
     fn from(&self, id: usize) -> Vec<&N>;

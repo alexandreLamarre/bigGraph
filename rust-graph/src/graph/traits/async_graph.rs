@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use std::fmt::Debug;
-use std::option::Iter;
+use std::option::IntoIter;
 
 #[async_trait]
 pub trait AsyncNode {
@@ -34,7 +34,7 @@ where
     E: AsyncEdge<N>,
 {
     async fn node(&self, id: usize) -> Option<&N>;
-    async fn nodes(&self) -> Option<Iter<&N>>;
+    async fn nodes(&self) -> Option<IntoIter<&N>>;
 
     async fn from(&self, id: usize) -> Vec<&N>;
     async fn has_edge_between(&self, xid: usize, yid: usize) -> bool;

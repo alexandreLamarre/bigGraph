@@ -3,7 +3,7 @@ use crate::graph::{
     traits::{Builder, Edge, EdgeAdder, Graph, Node, NodeAdder, Undirected, UndirectedBuilder},
 };
 use std::collections::BTreeMap;
-use std::option::Iter;
+use std::iter::Iterator;
 
 #[derive(Debug)]
 struct SimpleUndirectedGraph {
@@ -15,16 +15,25 @@ impl Graph<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
     fn node(&self, id: usize) -> Option<&SimpleNode> {
         self.nodes.get(&id)
     }
-    fn nodes(&self) -> Option<Iter<&SimpleNode>> {
+    fn nodes(&self) -> Option<Vec<&SimpleNode>> {
         if self.nodes.len() == 0 {
             return None;
         }
-        //  >:(
-        todo!("Implement nodes() for SimpleUndirectedGraph")
+        let v = self.nodes.iter().map(|(_, n)| n).collect();
+        Some(v)
     }
 
     fn from(&self, id: usize) -> Vec<&SimpleNode> {
-        todo!("Implement from() for SimpleUndirectedGraph")
+        let mut v = Vec::new();
+        if let Some(edges) = self.edges.get(&id) {
+            for (idx, _) in edges.iter() {
+                match self.node(*idx) {
+                    Some(n) => v.push(n),
+                    None => (),
+                }
+            }
+        }
+        v
     }
 
     fn has_edge_between(&self, xid: usize, yid: usize) -> bool {
@@ -72,10 +81,73 @@ impl EdgeAdder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
 
 impl Undirected<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {
     fn edge_between(&self, xid: usize, yid: usize) -> Option<&SimpleEdge> {
-        todo!("Implement edge_between() for SimpleUndirectedGraph")
+        if let Some(edges) = self.edges.get(&xid) {
+            edges.get(&yid)
+        } else {
+            None
+        }
     }
 }
 
 impl Builder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}
 
 impl UndirectedBuilder<SimpleNode, SimpleEdge> for SimpleUndirectedGraph {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rstest::{fixture, rstest};
+
+    #[fixture]
+    fn empty_graph() -> SimpleUndirectedGraph {
+        SimpleUndirectedGraph {
+            nodes: BTreeMap::new(),
+            edges: BTreeMap::new(),
+        }
+    }
+
+    #[fixture]
+    fn single_node_graph() -> SimpleUndirectedGraph {
+        let mut g = SimpleUndirectedGraph {
+            nodes: BTreeMap::new(),
+            edges: BTreeMap::new(),
+        };
+        g.add_node(SimpleUndirectedGraph::new_node());
+        g
+    }
+
+    #[fixture]
+    fn fully_connected_graph() -> SimpleUndirectedGraph {
+        let mut g = SimpleUndirectedGraph {
+            nodes: BTreeMap::new(),
+            edges: BTreeMap::new(),
+        };
+        let mut n1 = SimpleUndirectedGraph::new_node();
+        let mut n2 = SimpleUndirectedGraph::new_node();
+        let mut n3 = SimpleUndirectedGraph::new_node();
+        n1.value = 1;
+        n2.value = 2;
+        n3.value = 3;
+        g.add_node(n1.clone());
+        g.add_node(n2.clone());
+        g.add_node(n3.clone());
+        g.add_edge(SimpleUndirectedGraph::new_edge(n1.clone(), n2.clone()));
+        g.add_edge(SimpleUndirectedGraph::new_edge(n1.clone(), n3.clone()));
+        g.add_edge(SimpleUndirectedGraph::new_edge(n2.clone(), n3.clone()));
+        g
+    }
+
+    #[rstest]
+    #[case(0)]
+    #[case(1)]
+    fn add_node_test(#[case] id: usize) {
+        let mut g = SimpleUndirectedGraph {
+            nodes: BTreeMap::new(),
+            edges: BTreeMap::new(),
+        };
+        let mut n = SimpleUndirectedGraph::new_node();
+        n.value = id;
+        g.add_node(n);
+        assert_eq!(g.node(id).unwrap().value, id);
+    }
+}
