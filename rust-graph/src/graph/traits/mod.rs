@@ -1,6 +1,7 @@
 use std::fmt::Debug;
 
 pub mod async_graph;
+pub mod multigraph;
 
 pub trait Node: Debug + Clone + Sized + PartialEq {
     fn id(&self) -> usize;
