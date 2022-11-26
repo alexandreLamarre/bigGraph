@@ -1,3 +1,5 @@
+mod async_multigraph;
+
 use std::ops::Mul;
 
 use crate::graph::traits::Node;
@@ -28,7 +30,7 @@ where
     N: Node,
     L: Line<N>,
 {
-    fn node(&self, id: usize) -> &N;
+    fn node(&self, id: usize) -> Option<&N>;
     fn nodes(&self) -> Vec<&N>;
 
     fn from(&self, id: usize) -> Vec<&N>;
@@ -71,7 +73,7 @@ where
     fn to(&self, id: usize) -> Vec<&N>;
 }
 
-pub trait WeightedUndirectedMultiGraph<N, L> : WeightedMultiGraph<N, L>
+pub trait WeightedDirectedMultiGraph<N, L>: WeightedMultiGraph<N, L>
 where
     N: Node,
     L: WeightedLine<N>,
