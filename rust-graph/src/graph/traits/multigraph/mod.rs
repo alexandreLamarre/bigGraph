@@ -2,7 +2,7 @@ mod async_multigraph;
 
 use std::ops::Mul;
 
-use crate::graph::traits::Node;
+use crate::graph::traits::{Node, NodeAdder};
 
 pub trait Line<N>
 where
@@ -80,4 +80,74 @@ where
 {
     fn has_edge_from_to(&self, uid: usize, vid: usize) -> bool;
     fn to(&self, id: usize) -> Vec<&N>;
+}
+
+pub trait LineAdder<N, L>
+where
+    N: Node,
+    L: Line<N>,
+{
+    fn new_line(from: N, to: N) -> L;
+    fn add_line(&mut self, from: &N, to: &N) -> L;
+}
+
+pub trait WeightedLineAdder<N, L>: LineAdder<N, L>
+where
+    N: Node,
+    L: WeightedLine<N>,
+{
+    fn new_weighted_line(from: N, to: N, weight: f64) -> L;
+    fn add_weighted_line(&mut self, from: &N, to: &N, weight: f64) -> L;
+}
+
+pub trait LineRemover<N, L>
+where
+    N: Node,
+    L: Line<N>,
+{
+    fn remove_line(&mut self, from: &N, to: &N);
+}
+
+pub trait MultiGraphBuilder<N, L>: NodeAdder<N> + LineAdder<N, L>
+where
+    N: Node,
+    L: Line<N>,
+{
+}
+
+pub trait WeightedMultiGraphBuilder<N, L>: NodeAdder<N> + WeightedLineAdder<N, L>
+where
+    N: Node,
+    L: WeightedLine<N>,
+{
+}
+
+pub trait UndirectedMultiGraphBuilder<N, L>: MultiGraphBuilder<N, L>
+where
+    N: Node,
+    L: Line<N>,
+{
+}
+
+pub trait UndirectedWeightedMultiGraphBuilder<N, L>: WeightedMultiGraphBuilder<N, L>
+where
+    N: Node,
+    L: WeightedLine<N>,
+{
+}
+
+pub trait DirectedMultiGraphBuilder<N, L>:
+    DirectedMultiGraph<N, L> + MultiGraphBuilder<N, L>
+where
+    N: Node,
+    L: Line<N>,
+{
+}
+
+pub trait DirectedWeightedMultiGraphBuilder<N, L>:
+    DirectedMultiGraph<N, L> + WeightedMultiGraphBuilder<N, L>
+where
+    N: Node,
+    L: WeightedLine<N>,
+{
 }

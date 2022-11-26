@@ -2,9 +2,7 @@ use async_trait::async_trait;
 use std::fmt::Debug;
 use std::option::IntoIter;
 
-use crate::graph::traits::async_graph::AsyncNode;
-
-use super::{Multigraph, WeightedLine};
+use crate::graph::traits::async_graph::{AsyncNode, AsyncNodeAdder};
 
 #[async_trait]
 pub trait AsyncLine<N>
@@ -89,4 +87,85 @@ where
 {
     async fn has_edge_from_to(&self, uid: usize, vid: usize) -> bool;
     async fn to(&self, id: usize) -> Vec<&N>;
+}
+
+#[async_trait]
+pub trait AsyncLineAdder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncLine<N>,
+{
+    async fn new_line(from: N, to: N) -> L;
+    async fn add_line(&mut self, from: &N, to: &N) -> L;
+}
+
+#[async_trait]
+pub trait AsyncWeightedLineAdder<N, L>: AsyncLineAdder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncWeightedLine<N>,
+{
+    async fn new_weighted_line(from: N, to: N, weight: f64) -> L;
+    async fn add_weighted_line(&mut self, from: &N, to: &N, weight: f64) -> L;
+}
+
+#[async_trait]
+pub trait AsyncLineRemover<N, L>
+where
+    N: AsyncNode,
+    L: AsyncLine<N>,
+{
+    async fn remove_line(&mut self, from: &N, to: &N);
+}
+
+#[async_trait]
+pub trait AsyncMultiGraphBuilder<N, L>: AsyncNodeAdder<N> + AsyncLineAdder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncLine<N>,
+{
+}
+
+#[async_trait]
+pub trait AsyncWeightedMultiGraphBuilder<N, L>:
+    AsyncNodeAdder<N> + AsyncWeightedLineAdder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncWeightedLine<N>,
+{
+}
+
+#[async_trait]
+pub trait AsyncUndirectedMultiGraphBuilder<N, L>: AsyncMultiGraphBuilder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncLine<N>,
+{
+}
+
+#[async_trait]
+pub trait AsyncUndirectedWeightedMultiGraphBuilder<N, L>:
+    AsyncWeightedMultiGraphBuilder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncWeightedLine<N>,
+{
+}
+
+#[async_trait]
+pub trait AsyncDirectedMultiGraphBuilder<N, L>:
+    AsyncDirectedMultiGraph<N, L> + AsyncMultiGraphBuilder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncLine<N>,
+{
+}
+
+#[async_trait]
+pub trait AsyncDirectedWeightedMultiGraphBuilder<N, L>:
+    AsyncDirectedMultiGraph<N, L> + AsyncWeightedMultiGraphBuilder<N, L>
+where
+    N: AsyncNode,
+    L: AsyncWeightedLine<N>,
+{
 }
