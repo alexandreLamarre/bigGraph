@@ -1,0 +1,18 @@
+[package]
+name = "rust-graph"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.58"
+rstest = "0.15.0"
+tokio = { version = "1.21.2", features = ["full"] }
+clap = {version = "4.0.18", features = ["derive"]}
+axum = "0.5.17"
+serde = {version = "1.0.147", features = ["derive"]}
+log = "0.4"
+slog = { version = "2.7.0" , features = ["max_level_trace", "release_max_level_warn"] }
+slog-term = "2.9.0"
+slog-async = "2.7.0"
